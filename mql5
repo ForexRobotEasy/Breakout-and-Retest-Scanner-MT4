@@ -1,0 +1,43 @@
+mql5
+//+------------------------------------------------------------------+
+//|                    Breakout and Retest Scanner MT4                |
+//|                  Developed by Forex Robot Easy Team               |
+//|                 Developer's site: forexroboteasy.com              |
+//+------------------------------------------------------------------+
+
+// Include necessary libraries and indicators
+#include <Trade\Trade.mqh>
+#include <Indicators\BreakoutAndRetest.mqh>
+
+// Define global variables
+CTrade trade;
+CBreakoutAndRetest breakoutAndRetest;
+
+// Initialize the EA
+int OnInit()
+{
+    // Initialize the trade module
+    trade.SetExpertMagicNumber(123456); // Set the expert magic number
+
+    // Initialize the breakout and retest indicator
+    breakoutAndRetest.Init(Symbol(), Period());
+
+    return(INIT_SUCCEEDED);
+}
+
+// Execute the EA on every tick
+void OnTick()
+{
+    // Check for breakout and retest signals
+    if(breakoutAndRetest.CheckBreakout()) // Check for breakout
+    {
+        trade.Buy(Symbol(), 0.1, 0, 0, 0); // Open a buy position
+        trade.Sell(Symbol(), 0.1, 0, 0, 0); // Open a sell position
+    }
+    else if(breakoutAndRetest.CheckRetest()) // Check for retest
+    {
+        trade.CloseAll(); // Close all positions
+    }
+}
+
+//+------------------------------------------------------------------+
